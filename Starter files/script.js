@@ -24,5 +24,72 @@
 // </div>`;
 
 // API URL
-const requestURL = "https://dummyjson.com/products";
+
+
+const requestURL = fetch("https://dummyjson.com/products");
+
+// Task 1
+async function getproducts() {    
+    const response = await fetch("https://dummyjson.com/products");
+    const data = await response.json();
+    console.log(data);
+    let fragment = document.createDocumentFragment();
+    let shopContainer = document.getElementById("shop");
+    
+    data.products.forEach((product) => {
+      let itemdiv = document.createElement("div");
+      itemdiv.id = `product-id-${product.id}`;
+      itemdiv.className = "item";
+      let img = document.createElement("img");
+      img.width = 220;
+      img.src = product.thumbnail; 
+      itemdiv.appendChild(img);
+            let detailsdiv = document.createElement("div");
+      detailsdiv.className = "details";
+      let h3 = document.createElement("h3");
+      h3.textContent = product.title;
+      detailsdiv.appendChild(h3);
+      
+      let p = document.createElement("p");
+      p.textContent = product.description;
+      detailsdiv.appendChild(p);
+
+      let priceQuantityDiv = document.createElement("div");
+      priceQuantityDiv.className = "price-quantity";
+      let h2 = document.createElement("h2");
+      h2.textContent = `$ ${product.price}`;
+      
+      let buttonsDiv = document.createElement("div");
+      buttonsDiv.className = "buttons";
+
+      let minusIcon = document.createElement("i");
+      minusIcon.className = "fa-solid fa-minus";
+
+      let quantityDiv = document.createElement("div");
+      quantityDiv.id = product.id;
+      quantityDiv.className = "quantity";
+      quantityDiv.textContent = 0; 
+
+      let plusIcon = document.createElement("i");
+      plusIcon.className = "fa-solid fa-plus";
+
+      buttonsDiv.appendChild(minusIcon);
+      buttonsDiv.appendChild(quantityDiv);
+      buttonsDiv.appendChild(plusIcon);
+
+      priceQuantityDiv.appendChild(h2);
+      priceQuantityDiv.appendChild(buttonsDiv);
+
+      detailsdiv.appendChild(priceQuantityDiv);
+      
+      itemdiv.appendChild(detailsdiv);
+      fragment.appendChild(itemdiv);
+
+    });
+    
+    shopContainer.appendChild(fragment);
+}
+
+getproducts()
+
 
