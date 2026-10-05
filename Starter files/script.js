@@ -1,4 +1,3 @@
-"use strict";
 /**
  *This HTML structure is given, required to generate this structure by using
   createElement , appendChild & createDocumentFragment methods,
@@ -25,27 +24,31 @@
 
 // API URL
 
-
 const requestURL = fetch("https://dummyjson.com/products");
 
-// Task 1
+let basket = [];
+let totalCartAmount = 0; 
+
 async function getproducts() {    
     const response = await fetch("https://dummyjson.com/products");
     const data = await response.json();
-    console.log(data);
     let fragment = document.createDocumentFragment();
     let shopContainer = document.getElementById("shop");
+    let cartCounter = document.getElementById("cartAmount"); 
     
     data.products.forEach((product) => {
       let itemdiv = document.createElement("div");
       itemdiv.id = `product-id-${product.id}`;
       itemdiv.className = "item";
+      
       let img = document.createElement("img");
       img.width = 220;
       img.src = product.thumbnail; 
       itemdiv.appendChild(img);
-            let detailsdiv = document.createElement("div");
+
+      let detailsdiv = document.createElement("div");
       detailsdiv.className = "details";
+      
       let h3 = document.createElement("h3");
       h3.textContent = product.title;
       detailsdiv.appendChild(h3);
@@ -56,6 +59,7 @@ async function getproducts() {
 
       let priceQuantityDiv = document.createElement("div");
       priceQuantityDiv.className = "price-quantity";
+      
       let h2 = document.createElement("h2");
       h2.textContent = `$ ${product.price}`;
       
@@ -64,14 +68,34 @@ async function getproducts() {
 
       let minusIcon = document.createElement("i");
       minusIcon.className = "fa-solid fa-minus";
-
+      
       let quantityDiv = document.createElement("div");
-      quantityDiv.id = product.id;
+      quantityDiv.id = `q-${product.id}`;
       quantityDiv.className = "quantity";
       quantityDiv.textContent = 0; 
 
       let plusIcon = document.createElement("i");
       plusIcon.className = "fa-solid fa-plus";
+
+      plusIcon.addEventListener("click", () => {
+        
+        quantityDiv.textContent = Number(quantityDiv.textContent) + 1;
+        
+      
+        totalCartAmount = totalCartAmount + 1;
+        cartCounter.textContent = totalCartAmount;
+      });
+
+      minusIcon.addEventListener("click", () => {
+        if (Number(quantityDiv.textContent) > 0) {
+          
+          quantityDiv.textContent = Number(quantityDiv.textContent) - 1;
+          
+        
+          totalCartAmount = totalCartAmount - 1;
+          cartCounter.textContent = totalCartAmount;
+        }
+      });
 
       buttonsDiv.appendChild(minusIcon);
       buttonsDiv.appendChild(quantityDiv);
@@ -81,15 +105,11 @@ async function getproducts() {
       priceQuantityDiv.appendChild(buttonsDiv);
 
       detailsdiv.appendChild(priceQuantityDiv);
-      
       itemdiv.appendChild(detailsdiv);
       fragment.appendChild(itemdiv);
-
     });
     
     shopContainer.appendChild(fragment);
 }
 
-getproducts()
-
-
+getproducts();
